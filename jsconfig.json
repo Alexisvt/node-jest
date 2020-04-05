@@ -2,7 +2,9 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
-    "checkJs": true
+    "checkJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
   },
   "exclude": ["node_modules"]
 }
