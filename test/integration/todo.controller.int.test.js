@@ -14,10 +14,13 @@ describe(endpointURL, () => {
   });
 
   it(`should return error 500 on malformed data with POST ${endpointURL}`, async () => {
-    const { status } = await request(app)
+    const { status, body } = await request(app)
       .post(endpointURL)
       .send({ title: 'Missing done property' });
 
     expect(status).toBe(500);
+    expect(body).toStrictEqual({
+      message: 'Todo validation failed: done: Path `done` is required.',
+    });
   });
 });
