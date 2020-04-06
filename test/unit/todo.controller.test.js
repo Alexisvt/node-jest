@@ -30,6 +30,18 @@ describe('TodoController.createTodo', () => {
     expect(res.statusCode).toBe(200);
   });
 
+  it('should return JSON todo list', async () => {
+    const resolvedPromise = Promise.resolve(todos);
+
+    // @ts-ignore
+    TodoModel.find.mockReturnValue(resolvedPromise);
+
+    await TodoController.getTodos(req, res, next);
+
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual(todos);
+  });
+
   it('should have a createTodo funtion', () => {
     expect(typeof TodoController.createTodo).toBe('function');
   });
