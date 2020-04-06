@@ -11,4 +11,6 @@ exports.createTodo = async (req, res, next) => {
 
 exports.getTodos = async (req, res, next) => {
   const todos = await TodoModel.find();
+
+  res.status(200);
 };
