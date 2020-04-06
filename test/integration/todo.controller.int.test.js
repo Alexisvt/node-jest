@@ -6,11 +6,18 @@ const endpointURL = '/todos/';
 
 describe(endpointURL, () => {
   it(`POST ${endpointURL}`, async () => {
-    // @ts-ignore
-    const { body, statusCode } = await request(app).post(endpointURL).send(newTodo);
+    const { body, status } = await request(app).post(endpointURL).send(newTodo);
 
-    expect(statusCode).toBe(201);
+    expect(status).toBe(201);
     expect(body.title).toBe(newTodo.title);
     expect(body.done).toBe(newTodo.done);
+  });
+
+  it(`should return error 500 on malformed data with POST ${endpointURL}`, async () => {
+    const { status } = await request(app)
+      .post(endpointURL)
+      .send({ title: 'Missing done property' });
+
+    expect(status).toBe(500);
   });
 });

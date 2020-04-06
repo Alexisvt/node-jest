@@ -10,7 +10,7 @@ describe('TodoController.createTodo', () => {
     TodoModel.create = jest.fn();
     req = httpMocks.createRequest();
     res = httpMocks.createResponse();
-    next = null;
+    next = jest.fn();
   });
 
   it('should have a createTodo funtion', () => {
@@ -36,5 +36,16 @@ describe('TodoController.createTodo', () => {
     TodoModel.create.mockReturnValue(newTodo);
     await TodoController.createTodo(req, res, next);
     expect(res._getJSONData()).toStrictEqual(newTodo);
+  });
+
+  it('should handle errors', async () => {
+    const errorMessage = { message: 'Done property missing' };
+    const rejectedPromise = Promise.reject(errorMessage);
+
+    // @ts-ignore
+    TodoModel.create.mockReturnValue(rejectedPromise);
+
+    await TodoController.createTodo(req, res, next);
+    expect(next).toBeCalledWith(errorMessage);
   });
 });
