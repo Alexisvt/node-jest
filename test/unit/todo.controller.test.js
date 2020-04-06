@@ -13,6 +13,10 @@ describe('TodoController.createTodo', () => {
     next = jest.fn();
   });
 
+  it('should have a getTodo function', () => {
+    expect(typeof TodoController.getTodos).toBe('function');
+  });
+
   it('should have a createTodo funtion', () => {
     expect(typeof TodoController.createTodo).toBe('function');
   });
