@@ -24,6 +24,12 @@ describe('TodoController.createTodo', () => {
     expect(TodoModel.find).toBeCalled();
   });
 
+  it('should return 200 response code', async () => {
+    await TodoController.getTodos(req, res, next);
+
+    expect(res.statusCode).toBe(200);
+  });
+
   it('should have a createTodo funtion', () => {
     expect(typeof TodoController.createTodo).toBe('function');
   });
