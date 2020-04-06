@@ -25,9 +25,15 @@ describe('TodoController.createTodo', () => {
   });
 
   it('should return 200 response code', async () => {
+    const resolvedPromise = Promise.resolve(todos);
+
+    // @ts-ignore
+    TodoModel.find.mockReturnValue(resolvedPromise);
+
     await TodoController.getTodos(req, res, next);
 
     expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toBeTruthy();
   });
 
   it('should return JSON todo list', async () => {
@@ -40,6 +46,17 @@ describe('TodoController.createTodo', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toStrictEqual(todos);
+  });
+
+  it('should return 404 response code when no todos has been found', async () => {
+    const resolvedPromise = Promise.resolve([]);
+
+    TodoModel.find.mockReturnValue(resolvedPromise);
+
+    await TodoController.getTodos(req, res, next);
+
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
   });
 
   it('should have a createTodo funtion', () => {
