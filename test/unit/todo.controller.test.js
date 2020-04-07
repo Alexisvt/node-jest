@@ -9,6 +9,7 @@ let req, res, next;
 beforeEach(() => {
   TodoModel.create = jest.fn();
   TodoModel.find = jest.fn();
+  TodoModel.findById = jest.fn();
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
   next = jest.fn();
@@ -17,6 +18,16 @@ beforeEach(() => {
 describe('TodoController.getTodo', () => {
   it('should have a getTodo function', () => {
     expect(typeof TodoController.getTodo).toBe('function');
+  });
+
+  it('should call TodoModel.find with an Id', async () => {
+    req.params = {
+      id: '5e8b9bdda5214709c9ebe7a0',
+    };
+
+    await TodoController.getTodo(req, res, next);
+
+    expect(TodoModel.findById).toHaveBeenCalledWith(req.params.id);
   });
 });
 
