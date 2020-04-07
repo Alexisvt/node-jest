@@ -50,6 +50,18 @@ describe('TodoController.getTodo', () => {
     expect(res._getJSONData()).toBeTruthy();
     expect(res._getJSONData()).toStrictEqual(todo);
   });
+
+  it('should return 400 response code when no todo has been found', async () => {
+    req.params = {
+      id: 'non existing todo id',
+    };
+
+    TodoModel.findById.mockReturnValue({});
+
+    await TodoController.getTodo(req, res, next);
+    expect(res.statusCode).toBe(404);
+    expect(res._getJSONData()).toBeTruthy();
+  });
 });
 
 describe('TodoController.getTodos', () => {
