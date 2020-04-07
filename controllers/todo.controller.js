@@ -23,4 +23,6 @@ exports.getTodos = async (req, res, next) => {
   }
 };
 
-exports.getTodo = async (req, res, next) => {};
+exports.getTodo = async (req, res, next) => {
+  const todo = await TodoModel.findById(req.params.id);
+};
