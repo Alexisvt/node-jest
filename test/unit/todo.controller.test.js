@@ -56,11 +56,31 @@ describe('TodoController.getTodo', () => {
       id: 'non existing todo id',
     };
 
+    // @ts-ignore
     TodoModel.findById.mockReturnValue({});
 
     await TodoController.getTodo(req, res, next);
     expect(res.statusCode).toBe(404);
     expect(res._getJSONData()).toBeTruthy();
+  });
+
+  it('should handle errors', async () => {
+    const errorMessage = {
+      message: 'No todo found',
+    };
+
+    req.params = {
+      id: 'invalid id',
+    };
+
+    const rejectedPromise = Promise.reject(errorMessage);
+
+    // @ts-ignore
+    TodoModel.findById.mockReturnValue(rejectedPromise);
+
+    await TodoController.getTodo(req, res, next);
+
+    expect(next).toBeCalledWith(errorMessage);
   });
 });
 
