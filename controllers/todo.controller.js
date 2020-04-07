@@ -22,3 +22,5 @@ exports.getTodos = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getTodo = async (req, res, next) => {};
