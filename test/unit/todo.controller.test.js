@@ -22,12 +22,33 @@ describe('TodoController.getTodo', () => {
 
   it('should call TodoModel.find with an Id', async () => {
     req.params = {
-      id: '5e8b9bdda5214709c9ebe7a0',
+      id: newTodo['_id'],
     };
 
     await TodoController.getTodo(req, res, next);
 
     expect(TodoModel.findById).toHaveBeenCalledWith(req.params.id);
+  });
+
+  it('should return 200 response code and a todo', async () => {
+    const todo = {
+      _id: '5e8b9bdda5214709c9ebe7a0',
+      title: 'Make first unit test',
+      done: false,
+    };
+
+    req.params = {
+      id: todo['_id'],
+    };
+
+    // @ts-ignore
+    TodoModel.findById.mockReturnValue(todo);
+
+    await TodoController.getTodo(req, res, next);
+
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toBeTruthy();
+    expect(res._getJSONData()).toStrictEqual(todo);
   });
 });
 
