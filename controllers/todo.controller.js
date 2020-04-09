@@ -24,7 +24,6 @@ exports.getTodos = async (req, res, next) => {
 };
 
 exports.getTodo = async (req, res, next) => {
-
   try {
     const todo = await TodoModel.findById(req.params.id);
 
@@ -33,9 +32,9 @@ exports.getTodo = async (req, res, next) => {
     } else {
       res.status(404).json(todo);
     }
-
   } catch (error) {
     next(error);
-
   }
 };
+
+exports.updateTodo = (req, res, next) => {};
