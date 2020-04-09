@@ -16,12 +16,18 @@ describe(endpointURL, () => {
     firstTodo = body[0];
   });
 
-  test(`GET by Id ${endpointURL}:id`, async () => {
+  test(`GET todo by Id ${endpointURL}:id`, async () => {
     const { body, status } = await request(app).get(`${endpointURL}${firstTodo['_id']}`);
 
     expect(status).toBe(200);
     expect(body.title).toBe(firstTodo.title);
     expect(body.done).toBe(firstTodo.done);
+  });
+
+  test(`GET 404 when a todo doesnt exists ${endpointURL}:id`, async () => {
+    const { status } = await request(app).get(`${endpointURL}5e8a96516e970f6e931a08b9`);
+
+    expect(status).toBe(404);
   });
 
   it(`POST ${endpointURL}`, async () => {
