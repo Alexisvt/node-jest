@@ -3,16 +3,9 @@ const app = require('../../app');
 const newTodo = require('../mock-data/new-todo.json');
 
 const endpointURL = '/todos/';
+let firstTodo;
 
 describe(endpointURL, () => {
-  test(`GET ${endpointURL}:id`, async () => {
-    const { body, status } = await request(app).get(`${endpointURL}5e8a96516e970f6e931a08c4`);
-
-    expect(status).toBe(200);
-    expect(body.title).toBeDefined();
-    expect(body.done).toBeDefined();
-  });
-
   test(`GET ${endpointURL}`, async () => {
     const { body, status } = await request(app).get(endpointURL);
 
@@ -20,6 +13,15 @@ describe(endpointURL, () => {
     expect(Array.isArray(body)).toBeTruthy();
     expect(body[0].title).toBeDefined();
     expect(body[0].done).toBeDefined();
+    firstTodo = body[0];
+  });
+
+  test(`GET by Id ${endpointURL}:id`, async () => {
+    const { body, status } = await request(app).get(`${endpointURL}${firstTodo['_id']}`);
+
+    expect(status).toBe(200);
+    expect(body.title).toBe(firstTodo.title);
+    expect(body.done).toBe(firstTodo.done);
   });
 
   it(`POST ${endpointURL}`, async () => {
