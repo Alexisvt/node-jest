@@ -10,4 +10,6 @@ router.get('/', todoController.getTodos);
 
 router.put('/', todoController.updateTodo);
 
+router.delete('/:id', todoController.deleteTodo);
+
 module.exports = router;
