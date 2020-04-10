@@ -28,6 +28,19 @@ describe(endpointURL, () => {
     expect(body.done).toBe(firstTodo.done);
   });
 
+  test('PUT 404 when a todo doesnt exists', async () => {
+    const todoItem = {
+      _id: '5e8a5a641bbf86731784d0a7',
+      title: 'Make first unit test',
+      done: false,
+      __v: 0,
+    };
+
+    const { status } = await request(app).put(`${endpointURL}`).send(todoItem);
+
+    expect(status).toBe(404);
+  });
+
   test(`GET todo by Id ${endpointURL}:id`, async () => {
     const { body, status } = await request(app).get(`${endpointURL}${firstTodo['_id']}`);
 
