@@ -52,6 +52,24 @@ describe('TodoController.updateTodo', () => {
     expect(res._getJSONData()).toStrictEqual(availableTodo);
   });
 
+  it('should return 404 when a todo doesnt exists', async () => {
+    const fakeTodo = {
+      _id: '5e8b9bdda5218709c9eae7a0',
+      title: 'Make first unit test',
+      done: false,
+    };
+
+    req.body = fakeTodo;
+
+    // @ts-ignore
+    TodoModel.findByIdAndUpdate.mockReturnValue(null);
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+
   it('should handle errors', async () => {
     const errorMessage = {
       message: 'It wasnt possible to update the todo',
