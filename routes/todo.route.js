@@ -8,4 +8,6 @@ router.get('/:id', todoController.getTodo);
 
 router.get('/', todoController.getTodos);
 
+router.put('/', todoController.updateTodo);
+
 module.exports = router;
