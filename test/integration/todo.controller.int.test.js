@@ -4,6 +4,13 @@ const newTodo = require('../mock-data/new-todo.json');
 
 const endpointURL = '/todos/';
 let firstTodo;
+let createdTodo;
+let fakeTodoItem = {
+  _id: '5e8a5a641bbf86731784d0a7',
+  title: 'Make first unit test',
+  done: false,
+  __v: 0,
+};
 
 describe(endpointURL, () => {
   test(`GET ${endpointURL}`, async () => {
@@ -29,14 +36,7 @@ describe(endpointURL, () => {
   });
 
   test('PUT 404 when a todo doesnt exists', async () => {
-    const todoItem = {
-      _id: '5e8a5a641bbf86731784d0a7',
-      title: 'Make first unit test',
-      done: false,
-      __v: 0,
-    };
-
-    const { status } = await request(app).put(`${endpointURL}`).send(todoItem);
+    const { status } = await request(app).put(`${endpointURL}`).send(fakeTodoItem);
 
     expect(status).toBe(404);
   });
@@ -50,7 +50,7 @@ describe(endpointURL, () => {
   });
 
   test(`GET 404 when a todo doesnt exists ${endpointURL}:id`, async () => {
-    const { status } = await request(app).get(`${endpointURL}5e8a96516e970f6e931a08b9`);
+    const { status } = await request(app).get(`${endpointURL}${fakeTodoItem._id}`);
 
     expect(status).toBe(404);
   });
@@ -61,6 +61,20 @@ describe(endpointURL, () => {
     expect(status).toBe(201);
     expect(body.title).toBe(newTodo.title);
     expect(body.done).toBe(newTodo.done);
+    createdTodo = body;
+  });
+
+  test(`DELETE ${endpointURL}`, async () => {
+    const { body, status } = await request(app).delete(`${endpointURL}/${createdTodo['_id']}`);
+
+    expect(status).toBe(200);
+    expect(body).toStrictEqual(createdTodo);
+  });
+
+  test('DELETE 404 status when a todo doesnt exists', async () => {
+    const { status } = await request(app).delete(`${endpointURL}${fakeTodoItem._id}`);
+
+    expect(status).toBe(404);
   });
 
   it(`should return error 500 on malformed data with POST ${endpointURL}`, async () => {
@@ -74,5 +88,3 @@ describe(endpointURL, () => {
     });
   });
 });
-
-describe(endpointURL, () => {});
