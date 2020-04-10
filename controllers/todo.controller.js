@@ -37,4 +37,12 @@ exports.getTodo = async (req, res, next) => {
   }
 };
 
-exports.updateTodo = (req, res, next) => {};
+exports.updateTodo = async (req, res, next) => {
+  try {
+    const todo = await TodoModel.findByIdAndUpdate(req.body['_id'], req.body, { new: true });
+
+    res.status(200).json(todo);
+  } catch (error) {
+    next(error);
+  }
+};

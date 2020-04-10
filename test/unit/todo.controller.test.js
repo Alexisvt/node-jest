@@ -3,6 +3,7 @@ const TodoModel = require('../../model/todo.model');
 const httpMocks = require('node-mocks-http');
 const newTodo = require('../mock-data/new-todo.json');
 const todos = require('../mock-data/todos.json');
+const availableTodo = require('../mock-data/todo.json');
 
 let req, res, next;
 
@@ -10,6 +11,7 @@ beforeEach(() => {
   TodoModel.create = jest.fn();
   TodoModel.find = jest.fn();
   TodoModel.findById = jest.fn();
+  TodoModel.findByIdAndUpdate = jest.fn();
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
   next = jest.fn();
@@ -18,6 +20,50 @@ beforeEach(() => {
 describe('TodoController.updateTodo', () => {
   it('should have an updateTodo function', async () => {
     expect(typeof TodoController.updateTodo).toBe('function');
+  });
+
+  it('should call findByIdAndUpdate with a todo and options', async () => {
+    const options = {
+      new: true,
+    };
+    req.body = availableTodo;
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(TodoModel.findByIdAndUpdate).toHaveBeenCalledWith(
+      availableTodo['_id'],
+      availableTodo,
+      options
+    );
+  });
+
+  it('should return the updated todo item and status code 200', async () => {
+    req.body = availableTodo;
+
+    // @ts-ignore
+    TodoModel.findByIdAndUpdate.mockReturnValue(availableTodo);
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toBeTruthy();
+
+    expect(res._getJSONData()).toStrictEqual(availableTodo);
+  });
+
+  it('should handle errors', async () => {
+    const errorMessage = {
+      message: 'It wasnt possible to update the todo',
+    };
+
+    const rejectedPromise = Promise.reject(errorMessage);
+
+    // @ts-ignore
+    TodoModel.findByIdAndUpdate.mockReturnValue(rejectedPromise);
+
+    await TodoController.updateTodo(req, res, next);
+
+    expect(next).toBeCalledWith(errorMessage);
   });
 });
 
