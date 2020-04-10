@@ -25,6 +25,7 @@ describe('TodoController.updateTodo', () => {
   it('should call findByIdAndUpdate with a todo and options', async () => {
     const options = {
       new: true,
+      useFindAndModify: false,
     };
     req.body = availableTodo;
 

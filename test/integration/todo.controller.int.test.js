@@ -16,6 +16,18 @@ describe(endpointURL, () => {
     firstTodo = body[0];
   });
 
+  test(`PUT ${endpointURL}`, async () => {
+    // we change some data
+    firstTodo.done = true;
+    firstTodo.title = 'New task';
+
+    const { body, status } = await request(app).put(endpointURL).send(firstTodo);
+
+    expect(status).toBe(200);
+    expect(body.title).toBe(firstTodo.title);
+    expect(body.done).toBe(firstTodo.done);
+  });
+
   test(`GET todo by Id ${endpointURL}:id`, async () => {
     const { body, status } = await request(app).get(`${endpointURL}${firstTodo['_id']}`);
 
