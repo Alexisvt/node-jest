@@ -17,8 +17,14 @@ beforeEach(() => {
   next = jest.fn();
 });
 
+describe('TodoController.deleteTodo', () => {
+  it('should have a deleteTodo method', async () => {
+    expect(typeof TodoController.deleteTodo).toBe('function');
+  });
+});
+
 describe('TodoController.updateTodo', () => {
-  it('should have an updateTodo function', async () => {
+  it('should have an updateTodo method', async () => {
     expect(typeof TodoController.updateTodo).toBe('function');
   });
 
